@@ -1,15 +1,11 @@
+const apiUrl = "https://mynewsfunctionapp-brhpbzaccedwd3dy.northeurope-01.azurewebsites.net/api/GetNews?code=tpQSL0CrWBQM7bT-i-oyeuVaSLNkhAon-Ni9ektOZM2BAzFukMgnjw=="; 
 const container = document.getElementById("news-container");
 
 async function fetchNews() {
-  const category = document.getElementById("category").value;
   container.innerHTML = "<p>Loading...</p>";
 
   try {
-    // 🔑 Call your GetNews HTTP Function instead of NewsAPI directly
-    const res = await fetch(
-      `https://mynewsfunctionapp-brhpbzaccedwd3dy.northeurope-01.azurewebsites.net/api/GetNews?category=${category}&code=<tpQSL0CrWBQM7bT-i-oyeuVaSLNkhAon-Ni9ektOZM2BAzFukMgnjw==>`
-    );
-
+    const res = await fetch(apiUrl);
     const data = await res.json();
 
     if (!data || data.length === 0) {
@@ -30,9 +26,8 @@ async function fetchNews() {
     });
   } catch (err) {
     container.innerHTML = "<p>Error fetching news.</p>";
-    console.error("Error fetching news:", err);
+    console.error("Fetch error:", err);
   }
 }
 
-// Load news on page open
 fetchNews();
