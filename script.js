@@ -1,4 +1,3 @@
-const apiKey = "c63ede33723e4bc48945a744dd740721"; // replace with your key
 const container = document.getElementById("news-container");
 
 async function fetchNews() {
@@ -6,31 +5,34 @@ async function fetchNews() {
   container.innerHTML = "<p>Loading...</p>";
 
   try {
+    // 🔑 Call your GetNews HTTP Function instead of NewsAPI directly
     const res = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=us&category=${category}&apiKey=${apiKey}`
+      `https://mynewsfunctionapp-brhpbzaccedwd3dy.northeurope-01.azurewebsites.net/api/GetNews?category=${category}&code=<tpQSL0CrWBQM7bT-i-oyeuVaSLNkhAon-Ni9ektOZM2BAzFukMgnjw==>`
     );
+
     const data = await res.json();
 
-    if (data.articles.length === 0) {
+    if (!data || data.length === 0) {
       container.innerHTML = "<p>No news found.</p>";
       return;
     }
 
     container.innerHTML = "";
-    data.articles.forEach(article => {
+    data.forEach(article => {
       const card = document.createElement("div");
       card.className = "news-card";
       card.innerHTML = `
         <h3>${article.title}</h3>
-        <p>${article.source.name} | ${new Date(article.publishedAt).toLocaleString()}</p>
+        <p>${article.source?.name || "Unknown"} | ${new Date(article.publishedAt).toLocaleString()}</p>
         <a href="${article.url}" target="_blank">Read more</a>
       `;
       container.appendChild(card);
     });
   } catch (err) {
     container.innerHTML = "<p>Error fetching news.</p>";
-    console.error(err);
+    console.error("Error fetching news:", err);
   }
 }
 
-fetchNews(); // load on page open
+// Load news on page open
+fetchNews();
