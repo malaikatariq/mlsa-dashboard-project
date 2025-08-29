@@ -6,24 +6,26 @@ async function fetchNews() {
 
   try {
     const res = await fetch(apiUrl);
-    const data = await res.json();
+const data = await res.json();
 
-    if (!data || data.length === 0) {
-      container.innerHTML = "<p>No news found.</p>";
-      return;
-    }
+const articles = data.articles || data; // works for both shapes
 
-    container.innerHTML = "";
-    data.forEach(article => {
-      const card = document.createElement("div");
-      card.className = "news-card";
-      card.innerHTML = `
-        <h3>${article.title}</h3>
-        <p>${article.source?.name || "Unknown"} | ${new Date(article.publishedAt).toLocaleString()}</p>
-        <a href="${article.url}" target="_blank">Read more</a>
-      `;
-      container.appendChild(card);
-    });
+if (!articles || articles.length === 0) {
+  container.innerHTML = "<p>No news found.</p>";
+  return;
+}
+
+container.innerHTML = "";
+articles.forEach(article => {
+  const card = document.createElement("div");
+  card.className = "news-card";
+  card.innerHTML = `
+    <h3>${article.title}</h3>
+    <p>${article.source?.name || "Unknown"} | ${new Date(article.publishedAt).toLocaleString()}</p>
+    <a href="${article.url}" target="_blank">Read more</a>
+  `;
+  container.appendChild(card);
+});
   } catch (err) {
     container.innerHTML = "<p>Error fetching news.</p>";
     console.error("Fetch error:", err);
@@ -31,3 +33,4 @@ async function fetchNews() {
 }
 
 fetchNews();
+
